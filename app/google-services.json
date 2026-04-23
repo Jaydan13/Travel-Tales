@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "599228757374",
+    "project_id": "traveltales-789cc",
+    "storage_bucket": "traveltales-789cc.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:599228757374:android:b6251ec2aa53c10f612f2f",
+        "android_client_info": {
+          "package_name": "com.example.traveltales"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBkhMSemNJZHpyCPBdRdr5gbicciAP7kOA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

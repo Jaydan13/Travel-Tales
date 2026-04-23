@@ -8,27 +8,28 @@
     <!-- Top Banner -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="0dp"
+        android:layout_weight="0.1"
         android:background="#2196F3"
         android:gravity="center_vertical"
-        android:padding="16dp"
+        android:padding="5dp"
         android:orientation="horizontal">
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:id="@+id/appTitle"
             android:layout_weight="1"
             android:text="Travel Tales"
             android:textSize="22sp"
             android:textStyle="bold"
-            android:textColor="#FFFFFF" />
+            android:textColor="#FFFFFF"
+            android:layout_marginLeft="10dp"/>
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/settingsBtn"
-            android:text="Settings" />
+            android:id="@+id/profileBtn"
+            android:contentDescription="Profile" />
 
     </LinearLayout>
     
@@ -41,38 +42,10 @@
         <GridLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/gridlayout"
+            android:id="@+id/notesContainer"
             android:columnCount="2"
             android:padding="16dp">
 
-            <!-- Placeholder buttons -->
-            <Button
-                android:layout_width="0dp"
-                android:layout_height="120dp"
-                android:layout_columnWeight="1"
-                android:text="Button1"
-                android:layout_margin="8dp" />
-
-            <Button
-                android:layout_width="0dp"
-                android:layout_height="120dp"
-                android:layout_columnWeight="1"
-                android:text="Button2"
-                android:layout_margin="8dp" />
-
-            <Button
-                android:layout_width="0dp"
-                android:layout_height="120dp"
-                android:layout_columnWeight="1"
-                android:text="Button3"
-                android:layout_margin="8dp" />
-
-            <Button
-                android:layout_width="0dp"
-                android:layout_height="120dp"
-                android:layout_columnWeight="1"
-                android:text="Button4"
-                android:layout_margin="8dp" />
 
         </GridLayout>
 

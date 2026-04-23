@@ -2,16 +2,28 @@ package com.example.traveltales;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Objects;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class Register extends AppCompatActivity {
+
+    Button loginReturnBtn, registerBtn;
+    EditText newEmail, newPass, checkNewPass, username;
+    FirebaseAuth mAuth;
+    FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,7 +31,15 @@ public class Register extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_register);
 
-        Button loginReturnBtn = findViewById(R.id.loginReturnBtn);
+        loginReturnBtn = findViewById(R.id.loginReturnBtn);
+        registerBtn = findViewById(R.id.registerBtn);
+        newEmail = findViewById(R.id.newEmail);
+        newPass = findViewById(R.id.newPass);
+        checkNewPass = findViewById(R.id.checkNewPass);
+        username = findViewById(R.id.username);
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
+
         loginReturnBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -28,5 +48,49 @@ public class Register extends AppCompatActivity {
             }
         });
 
+        registerBtn.setOnClickListener(view -> registerUser());
+
+    }
+
+    private void registerUser() {
+        String email = newEmail.getText().toString().trim();
+        String password = newPass.getText().toString().trim();
+        String confirmPass = checkNewPass.getText().toString().trim();
+        String user = username.getText().toString().trim();
+
+        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(user)) {
+            Toast.makeText(this, "All Fields Required!!!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (!password.equals(confirmPass)) {
+            checkNewPass.setError("Password does not match!!!");
+            return;
+        }
+
+        if (password.length() < 6) {
+            newPass.setError("Password Length should be more than 6");
+            return;
+        }
+
+        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                String userId = mAuth.getCurrentUser().getUid();
+                Map<String, Object> userMap = new HashMap<>();
+                userMap.put("username", user);
+                userMap.put("email", email);
+
+                db.collection("users").document(userId).set(userMap).addOnSuccessListener(aVoid -> {
+                    Toast.makeText(this, "Account Created Successfully!!!", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(Register.this, Login.class);
+                    startActivity(intent);
+                    finish();
+                }).addOnFailureListener(e -> {
+                    Toast.makeText(this, "Failed to create Account!!!", Toast.LENGTH_LONG).show();
+                });
+            } else {
+                Toast.makeText(this, "Registration Failed!!!", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }
