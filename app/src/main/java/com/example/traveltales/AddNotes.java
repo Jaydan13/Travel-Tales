@@ -1,23 +1,34 @@
 package com.example.traveltales;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Calendar;
+
 public class AddNotes extends AppCompatActivity {
 
-    Button backBtn, saveBtn;
-    EditText countryName, fromDate, toDate, notesText;
+    Button saveBtn, fromDate, toDate;
+    String fromDateSelected = "", toDateSelected = "";
+    ImageButton backBtn;
+    EditText countryName, durationNo;
+    Spinner spinnerDuration;
+    RecyclerView addNotesRecycler;
     FirebaseAuth mAuth;
     FirebaseFirestore db;
 
@@ -29,12 +40,23 @@ public class AddNotes extends AppCompatActivity {
 
         backBtn = findViewById(R.id.backBtn);
         saveBtn = findViewById(R.id.saveBtn);
-        countryName = findViewById(R.id.countryName);
         fromDate = findViewById(R.id.fromDate);
         toDate = findViewById(R.id.toDate);
-        notesText = findViewById(R.id.notesText);
+
+        countryName = findViewById(R.id.countryName);
+        durationNo = findViewById(R.id.durationNo);
+
+        spinnerDuration = findViewById(R.id.spinnerDuration);
+
+        addNotesRecycler = findViewById(R.id.addNotesRecycler);
+
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
+
+        String[] durationOptions = {"Days", "Weeks", "Months"};
+        ArrayAdapter<String> durationAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, durationOptions);
+        durationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerDuration.setAdapter(durationAdapter);
 
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -44,19 +66,37 @@ public class AddNotes extends AppCompatActivity {
             }
         });
 
+        fromDate.setOnClickListener(v -> {
+            Calendar calendar = Calendar.getInstance();
+
+            DatePickerDialog datePicker = new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
+                month = month +1;
+                fromDateSelected = dayOfMonth + "/" + month + "/" + year;
+                fromDate.setText(fromDateSelected);
+            }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+
+            datePicker.show();
+        });
+
+        toDate.setOnClickListener(v -> {
+            Calendar calendar = Calendar.getInstance();
+
+            DatePickerDialog datePicker = new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
+                month = month +1;
+                toDateSelected = dayOfMonth + "/" + month + "/" + year;
+                toDate.setText(toDateSelected);
+            }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+
+            datePicker.show();
+        });
+
         saveBtn.setOnClickListener(view -> saveData());
 
     }
 
     private void saveData() {
         String name = countryName.getText().toString().trim();
-        String notes = notesText.getText().toString().trim();
-        String dateFrom = fromDate.getText().toString().trim();
-        String dateTo = toDate.getText().toString().trim();
-
-        if (TextUtils.isEmpty(name) || TextUtils.isEmpty(notes) || TextUtils.isEmpty(dateFrom) || TextUtils.isEmpty(dateTo)) {
-            Toast.makeText(this, "Fill all fields!!!", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        String durationNumberStr = durationNo.getText().toString().trim();
+        String durationPeriod = spinnerDuration.getSelectedItem().toString();
     }
 }
