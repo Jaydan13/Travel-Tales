@@ -10,7 +10,9 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.1"
-        android:background="#2196F3"
+        android:layout_margin="16dp"
+        android:background="@color/blue"
+        android:tag="appTheme"
         android:gravity="center_vertical"
         android:padding="5dp"
         android:orientation="horizontal">
@@ -22,41 +24,40 @@
             android:text="Travel Tales"
             android:textSize="22sp"
             android:textStyle="bold"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/white"
             android:layout_marginLeft="10dp"/>
 
-        <Button
+        <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/profileBtn"
-            android:contentDescription="Profile" />
+            android:src="@drawable/profile"
+            android:contentDescription="Profile"
+            android:tint="@color/white"
+            android:scaleType="fitCenter"
+            android:background="@color/blue"
+            android:layout_marginRight="10dp"/>
 
     </LinearLayout>
     
-    <!-- Middle Banner -->
-    <ScrollView
+    <!-- Notes -->
+    <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:id="@+id/notesRecycler"
+        android:padding="10dp"
+        android:layout_margin="16dp">
+    </androidx.recyclerview.widget.RecyclerView>
 
-        <GridLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/notesContainer"
-            android:columnCount="2"
-            android:padding="16dp">
-
-
-        </GridLayout>
-
-    </ScrollView>
-
-    <!-- add button -->
+    <!-- Add button -->
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/addBtn"
         android:text="Add Notes"
-        android:layout_margin="16dp" />
+        android:layout_margin="16dp"
+        android:backgroundTint="@color/blue"
+        android:tag="appTheme"/>
 
 </LinearLayout>
