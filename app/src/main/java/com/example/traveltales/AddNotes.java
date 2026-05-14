@@ -1,20 +1,24 @@
 package com.example.traveltales;
 
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -39,13 +43,13 @@ import java.util.Map;
 public class AddNotes extends AppCompatActivity {
 
     private static final int PICK_IMAGE = 1;
-    Button addCountryFlagChooseBtn, saveBtn, fromDate, toDate;
+    Button addCountryFlagChooseBtn, saveBtn, fromDate, toDate, addNotesBtn;
     ImageView addCountryFlagImage;
     String fromDateSelected = "", toDateSelected = "";
     ImageButton backBtn;
     EditText countryName, durationNo;
     Spinner spinnerDuration;
-    List<NoteEntry> noteEntries;
+    ArrayList<Note> notesList = new ArrayList<>();
     NotesAdapter adapter;
     RecyclerView addNotesRecycler;
     Uri imageUri;
@@ -63,6 +67,7 @@ public class AddNotes extends AppCompatActivity {
         fromDate = findViewById(R.id.fromDate);
         toDate = findViewById(R.id.toDate);
         addCountryFlagChooseBtn = findViewById(R.id.addCountryFlagChooseBtn);
+        addNotesBtn = findViewById(R.id.addNotesBtn);
 
         addCountryFlagImage = findViewById(R.id.addCountryFlagImage);
 
@@ -73,28 +78,19 @@ public class AddNotes extends AppCompatActivity {
 
         addNotesRecycler = findViewById(R.id.addNotesRecycler);
 
+        adapter = new NotesAdapter(notesList);
+
+        addNotesRecycler.setLayoutManager(new LinearLayoutManager(this));
+        addNotesRecycler.setAdapter(adapter);
+
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
-        durationNo.addTextChangedListener(new TextWatcher() {
-            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
-
-            @Override public void afterTextChanged(Editable s) {
-                generateNoteEntries();
-            }
-        });
 
         String[] durationOptions = {"Days", "Weeks", "Months"};
         ArrayAdapter<String> durationAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, durationOptions);
         durationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerDuration.setAdapter(durationAdapter);
-
-        noteEntries = new ArrayList<>();
-        addNotesRecycler.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new NotesAdapter(noteEntries);
-        addNotesRecycler.setAdapter(adapter);
 
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,6 +99,8 @@ public class AddNotes extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        addCountryFlagChooseBtn.setOnClickListener(view -> chooseImage());
 
         fromDate.setOnClickListener(v -> {
             Calendar calendar = Calendar.getInstance();
@@ -128,7 +126,143 @@ public class AddNotes extends AppCompatActivity {
             datePicker.show();
         });
 
-        addCountryFlagChooseBtn.setOnClickListener(view -> chooseImage());
+        addNotesBtn.setOnClickListener(view -> {
+
+            String duration = durationNo.getText().toString().trim();
+            String durationType = spinnerDuration.getSelectedItem().toString();
+
+            if (duration.isEmpty()) {
+                durationNo.setError("Enter Duration!!!");
+                return;
+            }
+
+            int durationInt = Integer.parseInt(duration);
+
+            Dialog dialog = new Dialog(this);
+            dialog.setContentView(R.layout.dialog_notes);
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+
+            LinearLayout notesContainer = dialog.findViewById(R.id.notesContainer);
+            Button saveDialogBtn = dialog.findViewById(R.id.saveDialogBtn);
+
+            ArrayList<EditText> editTexts = new ArrayList<>();
+            LayoutInflater inflater = LayoutInflater.from(this);
+
+            if (durationType.equals("Days")) {
+                for (int i = 1; i <= durationInt; i++) {
+                    View noteView = inflater.inflate(R.layout.item_note_entry, notesContainer, false);
+
+                    TextView dayTitle = noteView.findViewById(R.id.dayTitle);
+                    EditText noteEditText = noteView.findViewById(R.id.noteEditText);
+
+                    dayTitle.setText("Day " + i + ":");
+
+                    notesContainer.addView(noteView);
+
+                    editTexts.add(noteEditText);
+                }
+            } else if (durationType.equals("Weeks")) {
+                if (durationInt == 1) {
+                    for (int i = 1; i <= 7; i++) {
+                        View noteView = inflater.inflate(R.layout.item_note_entry, notesContainer, false);
+
+                        TextView dayTitle = noteView.findViewById(R.id.dayTitle);
+                        EditText noteEditText = noteView.findViewById(R.id.noteEditText);
+
+                        dayTitle.setText("Day " + i + ":");
+
+                        notesContainer.addView(noteView);
+
+                        editTexts.add(noteEditText);
+                    }
+                } else {
+                    for (int i = 1; i <= durationInt; i++) {
+                        View noteView = inflater.inflate(R.layout.item_note_entry, notesContainer, false);
+
+                        TextView dayTitle = noteView.findViewById(R.id.dayTitle);
+                        EditText noteEditText = noteView.findViewById(R.id.noteEditText);
+
+                        dayTitle.setText("Week " + i + ":");
+
+                        notesContainer.addView(noteView);
+
+                        editTexts.add(noteEditText);
+                    }
+                }
+            } else if (durationType.equals("Months")) {
+                if (durationInt == 1) {
+                    for (int i = 1; i <= 4; i++) {
+                        View noteView = inflater.inflate(R.layout.item_note_entry, notesContainer, false);
+
+                        TextView dayTitle = noteView.findViewById(R.id.dayTitle);
+                        EditText noteEditText = noteView.findViewById(R.id.noteEditText);
+
+                        dayTitle.setText("Week " + i + ":");
+
+                        notesContainer.addView(noteView);
+
+                        editTexts.add(noteEditText);
+                    }
+                } else {
+                    for (int i = 1; i <= durationInt; i++) {
+                        View noteView = inflater.inflate(R.layout.item_note_entry, notesContainer, false);
+
+                        TextView dayTitle = noteView.findViewById(R.id.dayTitle);
+                        EditText noteEditText = noteView.findViewById(R.id.noteEditText);
+
+                        dayTitle.setText("Month " + i + ":");
+
+                        notesContainer.addView(noteView);
+
+                        editTexts.add(noteEditText);
+                    }
+                }
+            }
+
+            saveDialogBtn.setOnClickListener(v -> {
+
+                notesList.clear();
+
+                for (int i = 0; i < editTexts.size(); i++) {
+
+                    String noteText =
+                            editTexts.get(i).getText().toString();
+
+                    String title = "";
+
+                    if (durationType.equals("Days")) {
+
+                        title = "Day " + (i + 1);
+
+                    } else if (durationType.equals("Weeks")) {
+
+                        if (duration.equals("1")) {
+                            title = "Day " + (i + 1);
+                        } else {
+                            title = "Week " + (i + 1);
+                        }
+
+                    } else if (durationType.equals("Months")) {
+
+                        if (duration.equals("1")) {
+                            title = "Week " + (i + 1);
+                        } else {
+                            title = "Month " + (i + 1);
+                        }
+                    }
+
+                    notesList.add(
+                            new Note(title, noteText)
+                    );
+                }
+
+                adapter.notifyDataSetChanged();
+
+                dialog.dismiss();
+            });
+
+            dialog.show();
+        });
 
         saveBtn.setOnClickListener(view -> saveNotes());
 
@@ -156,34 +290,6 @@ public class AddNotes extends AppCompatActivity {
 
             addCountryFlagImage.setImageURI(imageUri);
         }
-    }
-    private void generateNoteEntries() {
-        noteEntries.clear();
-
-        String numberStr = durationNo.getText().toString().trim();
-        if (TextUtils.isEmpty(numberStr)) {
-            return;
-        }
-        Log.d("DEBUG_DURATION", "Number entered: " + numberStr);
-
-        int number = Integer.parseInt(numberStr);
-        Log.d("DEBUG_DURATION", "Parsed number: " + number);
-        String type = spinnerDuration.getSelectedItem().toString();
-
-        if (type.equals("Days")) {
-            for (int i = 1; i <= number; i++) {
-                noteEntries.add(new NoteEntry("Day " + i));
-            }
-        } else if (type.equals("Weeks")) {
-            for (int i = 1; i <= number; i++) {
-                noteEntries.add(new NoteEntry("Week " + i));
-            }
-        } else {
-            for (int i = 1; i <= number; i++) {
-                noteEntries.add(new NoteEntry("Month " + i));
-            }
-        }
-        adapter.notifyDataSetChanged();
     }
     private void saveNotes() {
         String name = countryName.getText().toString().trim();

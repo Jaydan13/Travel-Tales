@@ -164,15 +164,36 @@
 
             </LinearLayout>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/addNotesRecycler"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:nestedScrollingEnabled="false"
-                android:background="@drawable/edittextborder"
-                android:padding="10dp">
+                android:orientation="vertical"
+                android:background="@drawable/edittextborder">
 
-            </androidx.recyclerview.widget.RecyclerView>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Your Notes:"
+                    android:textStyle="italic"/>
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/addNotesBtn"
+                    android:text="+ Add Notes"
+                    android:backgroundTint="@color/blue"
+                    android:tag="appTheme"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/addNotesRecycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false"
+                    android:padding="10dp">
+
+                </androidx.recyclerview.widget.RecyclerView>
+
+            </LinearLayout>
 
         </LinearLayout>
 
