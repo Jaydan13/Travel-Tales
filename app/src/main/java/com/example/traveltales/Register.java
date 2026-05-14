@@ -13,7 +13,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.Map;
 import java.util.HashMap;
-import java.util.Objects;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -58,7 +57,7 @@ public class Register extends AppCompatActivity {
         String confirmPass = checkNewPass.getText().toString().trim();
         String user = username.getText().toString().trim();
 
-        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(user)) {
+        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(confirmPass) || TextUtils.isEmpty(user)) {
             Toast.makeText(this, "All Fields Required!!!", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -71,6 +70,10 @@ public class Register extends AppCompatActivity {
         if (password.length() < 6) {
             newPass.setError("Password Length should be more than 6");
             return;
+        }
+
+        if (user.contains(" ")) {
+            username.setError("Cannot contain spaces!!");
         }
 
         mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {

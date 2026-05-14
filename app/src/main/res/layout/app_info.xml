@@ -4,12 +4,12 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="20dp"
-    android:background="#F6F6E9">
+    android:background="@color/white">
 
     <ImageView
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:src="@drawable/profile"
+        android:src="@drawable/app_logo"
         android:layout_gravity="center"/>
 
     <TextView
@@ -25,8 +25,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/infoText"
+        android:text="Text"
         android:paddingBottom="15dp"
-        android:textAlignment="center"/>
+        android:textAlignment="center"
+        android:layout_gravity="center"/>
 
     <Button
         android:id="@+id/closeBtn"

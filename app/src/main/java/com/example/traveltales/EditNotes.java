@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Spinner;
 
 import androidx.activity.EdgeToEdge;
@@ -23,7 +24,8 @@ public class EditNotes extends AppCompatActivity {
 
     ImageButton backBtn;
     EditText editCountryName, editDurationNo;
-    Button editFromDate, editToDate, saveBtn;
+    Button editCountryFlagChooseBtn, editFromDate, editToDate, saveBtn;
+    ImageView editCountryFlagImage;
     String fromDateSelected = "", toDateSelected = "";
     Spinner editSpinnerDuration;
     RecyclerView editNotesRecycler;
@@ -44,6 +46,9 @@ public class EditNotes extends AppCompatActivity {
         editFromDate = findViewById(R.id.editFromDate);
         editToDate = findViewById(R.id.editToDate);
         saveBtn = findViewById(R.id.saveBtn);
+        editCountryFlagChooseBtn = findViewById(R.id.editCountryFlagChooseBtn);
+
+        editCountryFlagImage = findViewById(R.id.editCountryFlagImage);
 
         editSpinnerDuration = findViewById(R.id.editSpinnerDuration);
 

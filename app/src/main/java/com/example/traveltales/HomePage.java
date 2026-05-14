@@ -4,19 +4,20 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.GridLayout;
+import android.widget.ImageButton;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 public class HomePage extends AppCompatActivity {
 
-    Button profileBtn, addBtn;
-    GridLayout notesContainer;
+    Button addBtn;
+    ImageButton profileBtn;
+    RecyclerView notesRecycler;
     FirebaseAuth mAuth;
     FirebaseFirestore db;
 
@@ -29,7 +30,7 @@ public class HomePage extends AppCompatActivity {
 
         profileBtn = findViewById(R.id.profileBtn);
         addBtn = findViewById(R.id.addBtn);
-        notesContainer = findViewById(R.id.notesContainer);
+        notesRecycler = findViewById(R.id.notesRecycler);
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 

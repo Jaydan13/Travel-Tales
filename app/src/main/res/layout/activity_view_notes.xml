@@ -50,11 +50,19 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <ImageView
+                android:layout_width="200dp"
+                android:layout_height="100dp"
+                android:src="@drawable/app_logo"
+                android:layout_gravity="center"
+                android:id="@+id/viewCountryFlagImage"/>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginBottom="5dp">
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/edittextborder">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -93,7 +101,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginBottom="5dp">
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/edittextborder">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -132,7 +141,8 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:id="@+id/viewNotesRecycler"
-                android:padding="10dp">
+                android:padding="10dp"
+                android:background="@drawable/edittextborder">
 
             </androidx.recyclerview.widget.RecyclerView>
 

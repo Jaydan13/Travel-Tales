@@ -69,12 +69,13 @@ public class Login extends AppCompatActivity {
                         Intent intent = new Intent(Login.this, HomePage.class);
                         startActivity(intent);
                         finish();
+                    } else {
+                        Toast.makeText(this, "User Data not found", Toast.LENGTH_SHORT).show();
                     }
                 });
             } else {
                 Toast.makeText(this, "Login Failed!!!, Try Again!!!", Toast.LENGTH_LONG).show();
             }
         });
-
     }
 }

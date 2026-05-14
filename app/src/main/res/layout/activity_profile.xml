@@ -60,7 +60,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/changeProfilePic"
-                android:text="Change Profile"
+                android:text="Change Picture"
                 android:backgroundTint="@color/blue"
                 android:tag="appTheme"
                 android:layout_gravity="center"/>

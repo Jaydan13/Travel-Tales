@@ -5,7 +5,14 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    android:padding="24dp">
+    android:padding="24dp"
+    android:background="@color/white">
+
+    <ImageView
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:src="@drawable/app_logo"
+        android:layout_marginBottom="50dp"/>
 
     <LinearLayout
         android:layout_width="300dp"
@@ -21,7 +28,8 @@
             android:hint="Email"
             android:inputType="textEmailAddress"
             android:layout_marginBottom="10dp"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            android:background="@drawable/edittextborder"/>
 
         <!-- Password Input -->
         <EditText
@@ -31,7 +39,8 @@
             android:hint="Password"
             android:inputType="textPassword"
             android:layout_marginBottom="10dp"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            android:background="@drawable/edittextborder"/>
 
         <LinearLayout
             android:layout_width="match_parent"

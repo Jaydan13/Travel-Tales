@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -18,6 +19,7 @@ public class ViewNotes extends AppCompatActivity {
 
     ImageButton backBtn;
     TextView viewCountryName, viewFromDate, viewToDate, viewDurationNo, viewSpinnerDuration;
+    ImageView viewCountryFlagImage;
     RecyclerView viewNotesRecycler;
     Button editBtn, deleteBtn;
     FirebaseAuth mAuth;
@@ -36,6 +38,7 @@ public class ViewNotes extends AppCompatActivity {
         viewToDate = findViewById(R.id.viewToDate);
         viewDurationNo = findViewById(R.id.viewDurationNo);
         viewSpinnerDuration = findViewById(R.id.viewSpinnerDuration);
+        viewCountryFlagImage = findViewById(R.id.viewCountryFlagImage);
 
         viewNotesRecycler = findViewById(R.id.viewNotesRecycler);
 
