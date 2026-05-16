@@ -117,8 +117,9 @@ public class Profile extends AppCompatActivity {
         dialog.show();
 
         TextView infoText = view.findViewById(R.id.infoText);
-        String text = "Travel Tales - Travel Logger\n" +
-                "Need to add";
+        String text = "Travel Tales - Travel Diary\n" +
+                "This app allows you to:\n- Add Notes on Countries you have visited\n" +
+                "- Create a to-visit list\n- Add Photos and Locations\n- ";
         infoText.setText(text);
 
         Button closeBtn = view.findViewById(R.id.closeBtn);
