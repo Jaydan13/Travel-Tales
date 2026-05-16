@@ -31,6 +31,8 @@ public class ViewNotes extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_view_notes);
 
+        ThemeHelper.applyTheme(this);
+
         backBtn = findViewById(R.id.backBtn);
 
         viewCountryName = findViewById(R.id.viewCountryName);

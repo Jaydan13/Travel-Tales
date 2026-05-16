@@ -28,6 +28,8 @@ public class HomePage extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_homepage);
 
+        ThemeHelper.applyTheme(this);
+
         profileBtn = findViewById(R.id.profileBtn);
         addBtn = findViewById(R.id.addBtn);
         notesRecycler = findViewById(R.id.notesRecycler);

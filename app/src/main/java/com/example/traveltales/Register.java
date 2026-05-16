@@ -30,6 +30,8 @@ public class Register extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_register);
 
+        ThemeHelper.applyTheme(this);
+
         loginReturnBtn = findViewById(R.id.loginReturnBtn);
         registerBtn = findViewById(R.id.registerBtn);
         newEmail = findViewById(R.id.newEmail);
@@ -78,6 +80,10 @@ public class Register extends AppCompatActivity {
 
         mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
+                if (mAuth.getCurrentUser() == null) {
+                    Toast.makeText(this, "Account Creation Failed", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 String userId = mAuth.getCurrentUser().getUid();
                 Map<String, Object> userMap = new HashMap<>();
                 userMap.put("username", user);
@@ -89,7 +95,7 @@ public class Register extends AppCompatActivity {
                     startActivity(intent);
                     finish();
                 }).addOnFailureListener(e -> {
-                    Toast.makeText(this, "Failed to create Account!!!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Failed to Create Account!!!", Toast.LENGTH_LONG).show();
                 });
             } else {
                 Toast.makeText(this, "Registration Failed!!!", Toast.LENGTH_LONG).show();

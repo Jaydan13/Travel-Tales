@@ -31,9 +31,7 @@ public class ThemeHelper {
             // BUTTONS → change background tint
             if (view instanceof Button) {
                 Button btn = (Button) view;
-
-                int id = btn.getId();
-
+                btn.setBackgroundTintList(ColorStateList.valueOf(colour));
             }
 
             // LAYOUTS → change background

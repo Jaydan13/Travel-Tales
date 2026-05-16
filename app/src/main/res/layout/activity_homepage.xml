@@ -35,7 +35,7 @@
             android:contentDescription="Profile"
             android:tint="@color/white"
             android:scaleType="fitCenter"
-            android:background="@color/blue"
+            android:background="@null"
             android:layout_marginRight="10dp"/>
 
     </LinearLayout>

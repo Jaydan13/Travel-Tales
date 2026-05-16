@@ -32,6 +32,8 @@ public class Profile extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_profile);
 
+        ThemeHelper.applyTheme(this);
+
         homeBtn = findViewById(R.id.homeBtn);
         profilePic = findViewById(R.id.profilePic);
         changeProfilePic = findViewById(R.id.changeProfilePic);
@@ -113,6 +115,8 @@ public class Profile extends AppCompatActivity {
                     .edit()
                     .putInt("appColourValue", colourValue)
                     .apply();
+
+            ThemeHelper.applyTheme(this);
 
             dialog.dismiss();
         });

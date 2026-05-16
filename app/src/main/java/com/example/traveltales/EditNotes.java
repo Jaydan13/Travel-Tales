@@ -38,6 +38,8 @@ public class EditNotes extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_edit_notes);
 
+        ThemeHelper.applyTheme(this);
+
         backBtn = findViewById(R.id.backBtn);
 
         editCountryName = findViewById(R.id.editCountryName);

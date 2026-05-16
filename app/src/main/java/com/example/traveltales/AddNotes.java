@@ -62,6 +62,8 @@ public class AddNotes extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_add_notes);
 
+        ThemeHelper.applyTheme(this);
+
         backBtn = findViewById(R.id.backBtn);
         saveBtn = findViewById(R.id.saveBtn);
         fromDate = findViewById(R.id.fromDate);

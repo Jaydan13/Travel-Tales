@@ -60,6 +60,10 @@ public class Login extends AppCompatActivity {
 
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
+                if (mAuth.getCurrentUser() == null) {
+                    Toast.makeText(this, "User not found", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 String userId = mAuth.getCurrentUser().getUid();
                 db.collection("users").document(userId).get().addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
