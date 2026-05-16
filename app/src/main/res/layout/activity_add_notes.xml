@@ -205,6 +205,8 @@
         android:id="@+id/saveBtn"
         android:text="Save"
         android:backgroundTint="@color/blue"
-        android:tag="appTheme"/>
+        android:tag="appTheme"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="16dp"/>
 
 </LinearLayout>

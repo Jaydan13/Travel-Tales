@@ -76,7 +76,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Colour:"
-                    android:textSize="14sp"
+                    android:textSize="18sp"
                     android:textStyle="bold"
                     android:layout_gravity="center_vertical"/>
 
@@ -90,6 +90,15 @@
                     android:tag="appTheme"/>
 
             </LinearLayout>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:id="@+id/visitListBtn"
+                android:text="To Visit Country List"
+                android:backgroundTint="@color/blue"
+                android:tag="appTheme"/>
 
             <Button
                 android:layout_width="match_parent"

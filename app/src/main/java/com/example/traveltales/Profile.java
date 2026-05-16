@@ -23,7 +23,7 @@ public class Profile extends AppCompatActivity {
 
     ImageButton homeBtn;
     ImageView profilePic;
-    Button changeProfilePic, chooseColourBtn, appInfoBtn, logoutBtn;
+    Button changeProfilePic, chooseColourBtn, visitListBtn, appInfoBtn, logoutBtn;
     FirebaseAuth mAuth;
 
     @Override
@@ -36,6 +36,7 @@ public class Profile extends AppCompatActivity {
         profilePic = findViewById(R.id.profilePic);
         changeProfilePic = findViewById(R.id.changeProfilePic);
         chooseColourBtn = findViewById(R.id.colourChooseBtn);
+        visitListBtn = findViewById(R.id.visitListBtn);
         appInfoBtn = findViewById(R.id.appInfoBtn);
         logoutBtn = findViewById(R.id.logoutBtn);
 
@@ -48,6 +49,14 @@ public class Profile extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Profile.this, HomePage.class);
+                startActivity(intent);
+            }
+        });
+
+        visitListBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Profile.this, ToVisit.class);
                 startActivity(intent);
             }
         });
