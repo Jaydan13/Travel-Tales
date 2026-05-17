@@ -21,23 +21,29 @@
 
         <Button
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:layout_weight="1"
             android:text="Yes!!!"
             android:id="@+id/yesBtn"
+            android:textSize="18sp"
             android:textStyle="bold"
             android:backgroundTint="@color/blue"
-            android:tag="appTheme"/>
+            android:tag="appTheme"
+            android:layout_marginRight="2dp"
+            android:layout_gravity="center_vertical"/>
 
         <Button
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:layout_weight="1"
             android:text="Maybe Later!!!"
+            android:textSize="18sp"
             android:id="@+id/laterBtn"
             android:textStyle="bold"
             android:backgroundTint="@color/blue"
-            android:tag="appTheme"/>
+            android:tag="appTheme"
+            android:layout_marginLeft="2dp"
+            android:layout_gravity="center_vertical"/>
 
     </LinearLayout>
 

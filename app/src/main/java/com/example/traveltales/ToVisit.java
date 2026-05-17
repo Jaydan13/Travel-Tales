@@ -106,12 +106,11 @@ public class ToVisit extends AppCompatActivity {
 
                     db.collection("users").document(userId).collection("visitList").add(toVisitList).addOnSuccessListener(doc -> {
                         Toast.makeText(this, "Country Added to List", Toast.LENGTH_SHORT).show();
+                        loadVisitList();
+                        dialog.dismiss();
                     }).addOnFailureListener(e -> Toast.makeText(this, "Error Occurred!!", Toast.LENGTH_SHORT).show());
 
                 });
-
-                dialog.dismiss();
-                loadVisitList();
             });
         });
 

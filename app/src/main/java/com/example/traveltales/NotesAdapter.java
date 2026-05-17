@@ -8,22 +8,35 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> {
 
-    ArrayList<Note> notesList;
+    private List<Note> notesList;
+    private boolean useCustomLayout;
 
-    public NotesAdapter(ArrayList<Note> notesList) {
+    public NotesAdapter(List<Note> notesList) {
         this.notesList = notesList;
+        this.useCustomLayout = useCustomLayout;
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+
+        TextView title, note;
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+
+            title = itemView.findViewById(R.id.noteTitle);
+            note = itemView.findViewById(R.id.noteText);
+        }
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(android.R.layout.simple_list_item_2, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_view_note, parent, false);
 
         return new ViewHolder(view);
     }
@@ -33,25 +46,12 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
 
         Note note = notesList.get(position);
 
-        holder.dayText.setText(note.getTitle());
-        holder.noteText.setText(note.getNote());
+        holder.title.setText(note.getTitle());
+        holder.note.setText(note.getNote());
     }
 
     @Override
     public int getItemCount() {
         return notesList.size();
-    }
-
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-
-        TextView dayText;
-        TextView noteText;
-
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-
-            dayText = itemView.findViewById(android.R.id.text1);
-            noteText = itemView.findViewById(android.R.id.text2);
-        }
     }
 }

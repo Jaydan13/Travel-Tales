@@ -13,11 +13,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 public class HomePage extends AppCompatActivity {
 
     Button addBtn;
     ImageButton profileBtn;
     RecyclerView notesRecycler;
+    List<HomeNoteItem> noteList;
+    HomeNotesAdapter adapter;
     FirebaseAuth mAuth;
     FirebaseFirestore db;
 
@@ -36,6 +42,11 @@ public class HomePage extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
+        noteList = new ArrayList<>();
+        adapter = new HomeNotesAdapter(this, noteList);
+        notesRecycler.setAdapter(adapter);
+        notesRecycler.setLayoutManager(new androidx.recyclerview.widget.GridLayoutManager(this, 2));
+
         profileBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -43,6 +54,8 @@ public class HomePage extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        loadNotes();
 
         addBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,5 +65,47 @@ public class HomePage extends AppCompatActivity {
             }
         });
 
+    }
+    protected void onResume() {
+        super.onResume();
+        loadNotes();
+    }
+    private void loadNotes() {
+
+        String userId = mAuth.getCurrentUser().getUid();
+
+        db.collection("users").document(userId).collection("notes").get().addOnSuccessListener(queryDocumentSnapshots -> {
+
+            noteList.clear();
+
+            for (com.google.firebase.firestore.DocumentSnapshot doc : queryDocumentSnapshots) {
+
+                String id = doc.getId();
+                String countryName = doc.getString("countryName");
+                String imageUrl = doc.getString("imageUrl");
+                String durationNumber = doc.getString("durationNumber");
+                String durationPeriod = doc.getString("durationPeriod");
+                String fromDate = doc.getString("fromDate");
+                String toDate = doc.getString("toDate");
+                List<Note> notesList = new ArrayList<>();
+
+                List<Map<String, Object>> rawNotes =
+                        (List<Map<String, Object>>) doc.get("notes");
+
+                if (rawNotes != null) {
+                    for (Map<String, Object> item : rawNotes) {
+
+                        String title = (String) item.get("title");
+                        String noteText = (String) item.get("note");
+
+                        notesList.add(new Note(title, noteText));
+                    }
+                }
+
+                noteList.add(new HomeNoteItem(id, countryName, imageUrl, durationNumber, durationPeriod, fromDate, toDate, notesList));
+            }
+
+            adapter.notifyDataSetChanged();
+        });
     }
 }

@@ -1,11 +1,17 @@
 package com.example.traveltales;
 
-public class Note {
+import java.io.Serializable;
+
+public class Note implements Serializable{
 
     private String title;
     private String note;
     private String location;
     private String imageUri;
+
+    public Note() {
+
+    }
 
     public Note(String title, String note) {
         this.title = title;

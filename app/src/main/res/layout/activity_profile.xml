@@ -61,6 +61,8 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/changeProfilePic"
                 android:text="Change Picture"
+                android:textSize="18sp"
+                android:textStyle="bold"
                 android:backgroundTint="@color/blue"
                 android:tag="appTheme"
                 android:layout_gravity="center"/>
@@ -83,9 +85,11 @@
                 <Button
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.4"
+                    android:layout_weight="0.5"
                     android:id="@+id/colourChooseBtn"
                     android:text="Change"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
                     android:backgroundTint="@color/blue"
                     android:tag="appTheme"/>
 
@@ -97,6 +101,8 @@
                 android:layout_margin="5dp"
                 android:id="@+id/visitListBtn"
                 android:text="To Visit Country List"
+                android:textSize="18sp"
+                android:textStyle="bold"
                 android:backgroundTint="@color/blue"
                 android:tag="appTheme"/>
 
@@ -106,6 +112,8 @@
                 android:layout_margin="5dp"
                 android:id="@+id/appInfoBtn"
                 android:text="App Info"
+                android:textSize="18sp"
+                android:textStyle="bold"
                 android:backgroundTint="@color/blue"
                 android:tag="appTheme"/>
 
@@ -115,6 +123,8 @@
                 android:layout_margin="5dp"
                 android:id="@+id/logoutBtn"
                 android:text="Logout"
+                android:textSize="18sp"
+                android:textStyle="bold"
                 android:backgroundTint="@color/blue"
                 android:tag="appTheme"/>
 

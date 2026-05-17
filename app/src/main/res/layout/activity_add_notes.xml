@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:text="Add Notes"
             android:textColor="@color/white"
-            android:textSize="20sp"
+            android:textSize="22sp"
             android:textStyle="bold"
             android:layout_marginLeft="10dp"
             android:layout_gravity="center_vertical"/>
@@ -56,13 +56,16 @@
                 android:layout_height="100dp"
                 android:src="@drawable/photo"
                 android:layout_gravity="center"
-                android:id="@+id/addCountryFlagImage"/>
+                android:id="@+id/addCountryFlagImage"
+                android:layout_marginBottom="5dp"/>
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/addCountryFlagChooseBtn"
                 android:text="Choose Image"
+                android:textSize="18sp"
+                android:textStyle="bold"
                 android:backgroundTint="@color/blue"
                 android:tag="appTheme"
                 android:layout_gravity="center"
@@ -112,6 +115,8 @@
                         android:layout_weight="1"
                         android:id="@+id/fromDate"
                         android:text="From"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
                         android:backgroundTint="@color/blue"
                         android:tag="appTheme"/>
 
@@ -121,6 +126,8 @@
                         android:layout_weight="1"
                         android:id="@+id/toDate"
                         android:text="To"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
                         android:backgroundTint="@color/blue"
                         android:tag="appTheme"/>
 
@@ -181,6 +188,8 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/addNotesBtn"
                     android:text="+ Add Notes"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
                     android:backgroundTint="@color/blue"
                     android:tag="appTheme"/>
 
@@ -204,6 +213,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/saveBtn"
         android:text="Save"
+        android:textSize="18sp"
+        android:textStyle="bold"
         android:backgroundTint="@color/blue"
         android:tag="appTheme"
         android:layout_marginHorizontal="16dp"

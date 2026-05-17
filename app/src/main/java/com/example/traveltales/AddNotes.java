@@ -5,9 +5,6 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -150,75 +147,43 @@ public class AddNotes extends AppCompatActivity {
             ArrayList<EditText> editTexts = new ArrayList<>();
             LayoutInflater inflater = LayoutInflater.from(this);
 
+            notesContainer.removeAllViews();
+
+            int count = 0;
+            String labelType = "Day";
+
             if (durationType.equals("Days")) {
-                for (int i = 1; i <= durationInt; i++) {
-                    View noteView = inflater.inflate(R.layout.item_note_entry, notesContainer, false);
-
-                    TextView dayTitle = noteView.findViewById(R.id.dayTitle);
-                    EditText noteEditText = noteView.findViewById(R.id.noteEditText);
-
-                    dayTitle.setText("Day " + i + ":");
-
-                    notesContainer.addView(noteView);
-
-                    editTexts.add(noteEditText);
-                }
+                count = durationInt;
+                labelType = "Day";
             } else if (durationType.equals("Weeks")) {
                 if (durationInt == 1) {
-                    for (int i = 1; i <= 7; i++) {
-                        View noteView = inflater.inflate(R.layout.item_note_entry, notesContainer, false);
-
-                        TextView dayTitle = noteView.findViewById(R.id.dayTitle);
-                        EditText noteEditText = noteView.findViewById(R.id.noteEditText);
-
-                        dayTitle.setText("Day " + i + ":");
-
-                        notesContainer.addView(noteView);
-
-                        editTexts.add(noteEditText);
-                    }
+                    count = 7;
+                    labelType = "Day";
                 } else {
-                    for (int i = 1; i <= durationInt; i++) {
-                        View noteView = inflater.inflate(R.layout.item_note_entry, notesContainer, false);
-
-                        TextView dayTitle = noteView.findViewById(R.id.dayTitle);
-                        EditText noteEditText = noteView.findViewById(R.id.noteEditText);
-
-                        dayTitle.setText("Week " + i + ":");
-
-                        notesContainer.addView(noteView);
-
-                        editTexts.add(noteEditText);
-                    }
+                    count = durationInt;
+                    labelType = "Week";
                 }
             } else if (durationType.equals("Months")) {
                 if (durationInt == 1) {
-                    for (int i = 1; i <= 4; i++) {
-                        View noteView = inflater.inflate(R.layout.item_note_entry, notesContainer, false);
-
-                        TextView dayTitle = noteView.findViewById(R.id.dayTitle);
-                        EditText noteEditText = noteView.findViewById(R.id.noteEditText);
-
-                        dayTitle.setText("Week " + i + ":");
-
-                        notesContainer.addView(noteView);
-
-                        editTexts.add(noteEditText);
-                    }
+                    count = 4;
+                    labelType = "Week";
                 } else {
-                    for (int i = 1; i <= durationInt; i++) {
-                        View noteView = inflater.inflate(R.layout.item_note_entry, notesContainer, false);
-
-                        TextView dayTitle = noteView.findViewById(R.id.dayTitle);
-                        EditText noteEditText = noteView.findViewById(R.id.noteEditText);
-
-                        dayTitle.setText("Month " + i + ":");
-
-                        notesContainer.addView(noteView);
-
-                        editTexts.add(noteEditText);
-                    }
+                    count = durationInt;
+                    labelType = "Month";
                 }
+            }
+
+            for (int i = 1; i <= count; i++) {
+
+                View noteView = inflater.inflate(R.layout.item_note_entry, notesContainer, false);
+
+                TextView dayTitle = noteView.findViewById(R.id.dayTitle);
+                EditText noteEditText = noteView.findViewById(R.id.noteEditText);
+
+                dayTitle.setText(labelType + " " + i + ":");
+
+                notesContainer.addView(noteView);
+                editTexts.add(noteEditText);
             }
 
             saveDialogBtn.setOnClickListener(v -> {
@@ -227,25 +192,19 @@ public class AddNotes extends AppCompatActivity {
 
                 for (int i = 0; i < editTexts.size(); i++) {
 
-                    String noteText =
-                            editTexts.get(i).getText().toString();
-
+                    String noteText = editTexts.get(i).getText().toString();
                     String title = "";
 
                     if (durationType.equals("Days")) {
-
                         title = "Day " + (i + 1);
 
                     } else if (durationType.equals("Weeks")) {
-
                         if (duration.equals("1")) {
                             title = "Day " + (i + 1);
                         } else {
                             title = "Week " + (i + 1);
                         }
-
                     } else if (durationType.equals("Months")) {
-
                         if (duration.equals("1")) {
                             title = "Week " + (i + 1);
                         } else {
@@ -253,16 +212,11 @@ public class AddNotes extends AppCompatActivity {
                         }
                     }
 
-                    notesList.add(
-                            new Note(title, noteText)
-                    );
+                    notesList.add(new Note(title, noteText));
                 }
-
                 adapter.notifyDataSetChanged();
-
                 dialog.dismiss();
             });
-
             dialog.show();
         });
 
@@ -277,29 +231,124 @@ public class AddNotes extends AppCompatActivity {
         startActivityForResult(intent, PICK_IMAGE);
     }
     @Override
-    protected void onActivityResult(int requestCode,
-                                    int resultCode,
-                                    @Nullable Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == PICK_IMAGE
-                && resultCode == RESULT_OK
-                && data != null
-                && data.getData() != null) {
-
+        if (requestCode == PICK_IMAGE && resultCode == RESULT_OK && data != null && data.getData() != null) {
             imageUri = data.getData();
-
             addCountryFlagImage.setImageURI(imageUri);
         }
     }
     private void saveNotes() {
-        String name = countryName.getText().toString().trim();
+
+        String countryName = this.countryName.getText().toString().trim();
         String durationNumberStr = durationNo.getText().toString().trim();
         String durationPeriod = spinnerDuration.getSelectedItem().toString();
 
-        if (name.isEmpty()) {
-            countryName.setError("Missing Field");
+        // Validation
+        if (countryName.isEmpty()) {
+            this.countryName.setError("Missing Field");
+            return;
         }
+
+        if (durationNumberStr.isEmpty()) {
+            durationNo.setError("Missing Field");
+            return;
+        }
+
+        if (fromDateSelected.isEmpty()) {
+            Toast.makeText(this, "Select From Date", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (toDateSelected.isEmpty()) {
+            Toast.makeText(this, "Select To Date", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (notesList.isEmpty()) {
+            Toast.makeText(this, "Add Notes First", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (mAuth.getCurrentUser() == null) {
+            Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String userId = mAuth.getCurrentUser().getUid();
+
+        // Convert notes list into Firestore format
+        List<Map<String, String>> notesData = new ArrayList<>();
+
+        for (Note note : notesList) {
+
+            Map<String, String> noteMap = new HashMap<>();
+
+            noteMap.put("title", note.getTitle());
+            noteMap.put("note", note.getNote());
+
+            notesData.add(noteMap);
+        }
+
+        // Main data map
+        Map<String, Object> noteData = new HashMap<>();
+
+        noteData.put("countryName", countryName);
+        noteData.put("durationNumber", durationNumberStr);
+        noteData.put("durationPeriod", durationPeriod);
+        noteData.put("fromDate", fromDateSelected);
+        noteData.put("toDate", toDateSelected);
+        noteData.put("notes", notesData);
+
+        // If image uploaded
+        if (imageUri != null) {
+
+            MediaManager.get().upload(imageUri).callback(new UploadCallback() {
+
+                @Override
+                public void onStart(String requestId) {
+
+                }
+
+                @Override
+                public void onProgress(String requestId, long bytes, long totalBytes) {
+
+                }
+
+                @Override
+                public void onSuccess(String requestId, Map resultData) {
+                    String imageUrl = resultData.get("secure_url").toString();
+                    noteData.put("imageUrl", imageUrl);
+                    saveToFirestore(userId, noteData);
+                }
+
+                @Override
+                public void onError(String requestId, ErrorInfo error) {
+                    Toast.makeText(AddNotes.this, "Image Upload Failed", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onReschedule(String requestId, ErrorInfo error) {
+
+                }
+            }).dispatch();
+
+        } else {
+            noteData.put("imageUrl", "");
+            saveToFirestore(userId, noteData);
+        }
+    }
+
+    private void saveToFirestore(String userId, Map<String, Object> noteData) {
+
+        db.collection("users").document(userId).collection("notes").add(noteData).addOnSuccessListener(documentReference -> {
+
+            Toast.makeText(this, "Notes Saved Successfully", Toast.LENGTH_SHORT).show();
+            finish();
+        }).addOnFailureListener(e -> {
+            Toast.makeText(this, "Failed To Save Notes", Toast.LENGTH_SHORT).show();
+        });
     }
 }

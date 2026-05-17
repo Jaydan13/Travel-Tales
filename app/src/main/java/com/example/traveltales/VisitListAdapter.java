@@ -61,6 +61,7 @@ public class VisitListAdapter extends RecyclerView.Adapter<VisitListAdapter.View
 
         holder.visitedBtn.setOnClickListener(v -> {
             Context context = v.getContext();
+            Toast.makeText(context, "Button pressed", Toast.LENGTH_SHORT).show();
             Dialog dialog = new Dialog(context);
             dialog.setContentView(R.layout.create_note);
 
@@ -111,6 +112,7 @@ public class VisitListAdapter extends RecyclerView.Adapter<VisitListAdapter.View
                     dialog.dismiss();
                 });
             });
+            dialog.show();
         });
 
         holder.removeBtn.setOnClickListener(v -> {

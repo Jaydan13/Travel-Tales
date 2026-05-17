@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:text="Edit Notes"
             android:textColor="@color/white"
-            android:textSize="20sp"
+            android:textSize="22sp"
             android:textStyle="bold"
             android:layout_marginLeft="10dp"
             android:layout_gravity="center_vertical"/>
@@ -54,15 +54,18 @@
             <ImageView
                 android:layout_width="200dp"
                 android:layout_height="100dp"
-                android:src="@drawable/app_logo"
+                android:src="@drawable/photo"
                 android:layout_gravity="center"
-                android:id="@+id/editCountryFlagImage"/>
+                android:id="@+id/editCountryFlagImage"
+                android:layout_marginBottom="5dp"/>
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/editCountryFlagChooseBtn"
                 android:text="Choose Image"
+                android:textSize="18sp"
+                android:textStyle="bold"
                 android:backgroundTint="@color/blue"
                 android:tag="appTheme"
                 android:layout_gravity="center"
@@ -111,6 +114,8 @@
                         android:layout_weight="1"
                         android:id="@+id/editFromDate"
                         android:text="From"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
                         android:backgroundTint="@color/blue"
                         android:tag="appTheme"/>
 
@@ -120,6 +125,8 @@
                         android:layout_weight="1"
                         android:id="@+id/editToDate"
                         android:text="To"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
                         android:backgroundTint="@color/blue"
                         android:tag="appTheme"/>
 
@@ -163,15 +170,38 @@
 
             </LinearLayout>
 
-            <androidx.recyclerview.widget.RecyclerView
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:id="@+id/editNotesRecycler"
-                android:padding="10dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
                 android:background="@drawable/edittextborder">
 
-            </androidx.recyclerview.widget.RecyclerView>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Your Notes:"
+                    android:textStyle="italic"/>
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/editNotesBtn"
+                    android:text="Edit Notes"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:backgroundTint="@color/blue"
+                    android:tag="appTheme"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/editNotesRecycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false"
+                    android:padding="10dp">
+
+                </androidx.recyclerview.widget.RecyclerView>
+
+            </LinearLayout>
 
         </LinearLayout>
 
@@ -182,7 +212,11 @@
         android:layout_height="wrap_content"
         android:id="@+id/saveBtn"
         android:text="Save"
+        android:textSize="18sp"
+        android:textStyle="bold"
         android:backgroundTint="@color/blue"
-        android:tag="appTheme"/>
+        android:tag="appTheme"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="16dp"/>
 
 </LinearLayout>
