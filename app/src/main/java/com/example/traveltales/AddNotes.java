@@ -1,5 +1,7 @@
 package com.example.traveltales;
 
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
@@ -40,15 +42,17 @@ import java.util.Map;
 public class AddNotes extends AppCompatActivity {
 
     private static final int PICK_IMAGE = 1;
-    Button addCountryFlagChooseBtn, saveBtn, fromDate, toDate, addNotesBtn;
+    Button addCountryFlagChooseBtn, saveBtn, fromDate, toDate, addNotesBtn, addLocationBtn, addImagesBtn;
     ImageView addCountryFlagImage;
     String fromDateSelected = "", toDateSelected = "";
     ImageButton backBtn;
     EditText countryName, durationNo;
     Spinner spinnerDuration;
     ArrayList<Note> notesList = new ArrayList<>();
-    NotesAdapter adapter;
-    RecyclerView addNotesRecycler;
+    ArrayList<LocationModel> locationList = new ArrayList<>();
+    NotesAdapter notesAdapter;
+    LocationAdapter locationAdapter;
+    RecyclerView addNotesRecycler, addLocationRecycler, addImageRecycler;
     Uri imageUri;
     FirebaseAuth mAuth;
     FirebaseFirestore db;
@@ -67,6 +71,8 @@ public class AddNotes extends AppCompatActivity {
         toDate = findViewById(R.id.toDate);
         addCountryFlagChooseBtn = findViewById(R.id.addCountryFlagChooseBtn);
         addNotesBtn = findViewById(R.id.addNotesBtn);
+        addLocationBtn = findViewById(R.id.addLocationBtn);
+        addImagesBtn = findViewById(R.id.addImagesBtn);
 
         addCountryFlagImage = findViewById(R.id.addCountryFlagImage);
 
@@ -76,15 +82,19 @@ public class AddNotes extends AppCompatActivity {
         spinnerDuration = findViewById(R.id.spinnerDuration);
 
         addNotesRecycler = findViewById(R.id.addNotesRecycler);
+        addLocationRecycler = findViewById(R.id.addLocationRecycler);
+        addImageRecycler = findViewById(R.id.addImageRecycler);
 
-        adapter = new NotesAdapter(notesList);
-
+        notesAdapter = new NotesAdapter(notesList);
         addNotesRecycler.setLayoutManager(new LinearLayoutManager(this));
-        addNotesRecycler.setAdapter(adapter);
+        addNotesRecycler.setAdapter(notesAdapter);
+
+        locationAdapter = new LocationAdapter(locationList);
+        addLocationRecycler.setLayoutManager(new LinearLayoutManager(this));
+        addLocationRecycler.setAdapter(locationAdapter);
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
-
 
         String[] durationOptions = {"Days", "Weeks", "Months"};
         ArrayAdapter<String> durationAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, durationOptions);
@@ -142,7 +152,7 @@ public class AddNotes extends AppCompatActivity {
             dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
             LinearLayout notesContainer = dialog.findViewById(R.id.notesContainer);
-            Button saveDialogBtn = dialog.findViewById(R.id.saveDialogBtn);
+            Button saveNotesDialogBtn = dialog.findViewById(R.id.saveNotesDialogBtn);
 
             ArrayList<EditText> editTexts = new ArrayList<>();
             LayoutInflater inflater = LayoutInflater.from(this);
@@ -184,9 +194,10 @@ public class AddNotes extends AppCompatActivity {
 
                 notesContainer.addView(noteView);
                 editTexts.add(noteEditText);
+
             }
 
-            saveDialogBtn.setOnClickListener(v -> {
+            saveNotesDialogBtn.setOnClickListener(v -> {
 
                 notesList.clear();
 
@@ -214,10 +225,55 @@ public class AddNotes extends AppCompatActivity {
 
                     notesList.add(new Note(title, noteText));
                 }
-                adapter.notifyDataSetChanged();
+                notesAdapter.notifyDataSetChanged();
                 dialog.dismiss();
             });
             dialog.show();
+        });
+
+        addLocationBtn.setOnClickListener(v -> {
+
+            Builder builder = new Builder(AddNotes.this);
+
+            View dialogView = getLayoutInflater().inflate(R.layout.item_location_entry, null);
+            builder.setView(dialogView);
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
+
+            // Dialog Views
+            RecyclerView locationRecycler = dialogView.findViewById(R.id.locationRecycler);
+            Button dialogAddLocationBtn = dialogView.findViewById(R.id.dialogAddLocationBtn);
+            Button dialogSaveLocationBtn = dialogView.findViewById(R.id.dialogSaveLocationBtn);
+
+            List<LocationModel> tempLocationList = new ArrayList<>();
+            LocationAdapter tempAdapter = new LocationAdapter(tempLocationList);
+            locationRecycler.setLayoutManager(new LinearLayoutManager(this));
+            locationRecycler.setAdapter(tempAdapter);
+
+            dialogAddLocationBtn.setOnClickListener(view -> {
+
+                MapPickerDialog mapPickerDialog = new MapPickerDialog();
+
+                mapPickerDialog.setOnLocationSelectedListener(location -> {
+                    tempLocationList.add(location);
+                    tempAdapter.notifyDataSetChanged();
+                });
+
+                mapPickerDialog.show(getSupportFragmentManager(), "map_picker");
+
+            });
+
+            dialogSaveLocationBtn.setOnClickListener(view -> {
+
+                locationList.clear();
+
+                locationList.addAll(tempLocationList);
+                locationAdapter.notifyDataSetChanged();
+
+                dialog.dismiss();
+            });
+
         });
 
         saveBtn.setOnClickListener(view -> saveNotes());
@@ -235,7 +291,10 @@ public class AddNotes extends AppCompatActivity {
 
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == PICK_IMAGE && resultCode == RESULT_OK && data != null && data.getData() != null) {
+        // IMAGE PICK
+        if (requestCode == PICK_IMAGE && resultCode == RESULT_OK
+                && data != null && data.getData() != null) {
+
             imageUri = data.getData();
             addCountryFlagImage.setImageURI(imageUri);
         }
@@ -292,6 +351,19 @@ public class AddNotes extends AppCompatActivity {
             notesData.add(noteMap);
         }
 
+        List<Map<String, Object>> locationsData = new ArrayList<>();
+
+        for (LocationModel location : locationList) {
+
+            Map<String, Object> locationMap = new HashMap<>();
+
+            locationMap.put("title", location.getTitle());
+            locationMap.put("latitude", location.getLatitude());
+            locationMap.put("longitude", location.getLongitude());
+
+            locationsData.add(locationMap);
+        }
+
         // Main data map
         Map<String, Object> noteData = new HashMap<>();
 
@@ -301,6 +373,7 @@ public class AddNotes extends AppCompatActivity {
         noteData.put("fromDate", fromDateSelected);
         noteData.put("toDate", toDateSelected);
         noteData.put("notes", notesData);
+        noteData.put("locations", locationsData);
 
         // If image uploaded
         if (imageUri != null) {
@@ -340,7 +413,6 @@ public class AddNotes extends AppCompatActivity {
             saveToFirestore(userId, noteData);
         }
     }
-
     private void saveToFirestore(String userId, Map<String, Object> noteData) {
 
         db.collection("users").document(userId).collection("notes").add(noteData).addOnSuccessListener(documentReference -> {
@@ -351,4 +423,5 @@ public class AddNotes extends AppCompatActivity {
             Toast.makeText(this, "Failed To Save Notes", Toast.LENGTH_SHORT).show();
         });
     }
+
 }

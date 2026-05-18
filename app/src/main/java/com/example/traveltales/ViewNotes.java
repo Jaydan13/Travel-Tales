@@ -11,13 +11,13 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ViewNotes extends AppCompatActivity {
@@ -25,7 +25,7 @@ public class ViewNotes extends AppCompatActivity {
     ImageButton backBtn;
     TextView viewCountryName, viewFromDate, viewToDate, viewDurationNo, viewSpinnerDuration;
     ImageView viewCountryFlagImage;
-    RecyclerView viewNotesRecycler;
+    RecyclerView viewNotesRecycler, viewLocationRecycler, viewImagesRecycler;
     Button editBtn, deleteBtn;
     FirebaseAuth mAuth;
     FirebaseFirestore db;
@@ -48,6 +48,8 @@ public class ViewNotes extends AppCompatActivity {
         viewCountryFlagImage = findViewById(R.id.viewCountryFlagImage);
 
         viewNotesRecycler = findViewById(R.id.viewNotesRecycler);
+        viewLocationRecycler = findViewById(R.id.viewLocationsRecycler);
+        viewImagesRecycler = findViewById(R.id.viewImagesRecycler);
 
         editBtn = findViewById(R.id.editBtn);
         deleteBtn = findViewById(R.id.deleteBtn);
@@ -63,6 +65,7 @@ public class ViewNotes extends AppCompatActivity {
         String fromDate = getIntent().getStringExtra("fromDate");
         String toDate = getIntent().getStringExtra("toDate");
         List<Note> notesList = (List<Note>) getIntent().getSerializableExtra("notes");
+        List<LocationModel> locationList = (List<LocationModel>) getIntent().getSerializableExtra("locations");
 
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,11 +85,13 @@ public class ViewNotes extends AppCompatActivity {
         } else {
             Glide.with(this).load(imageUrl).into(viewCountryFlagImage);
         }
-        NotesAdapter adapter = new NotesAdapter(notesList);
+        NotesAdapter notesAdapter = new NotesAdapter(notesList);
+        viewNotesRecycler.setLayoutManager(new LinearLayoutManager(this));
+        viewNotesRecycler.setAdapter(notesAdapter);
 
-        viewNotesRecycler.setLayoutManager(new androidx.recyclerview.widget.LinearLayoutManager(this));
-        viewNotesRecycler.setAdapter(adapter);
-
+        LocationViewAdapter locationViewAdapter = new LocationViewAdapter(locationList);
+        viewLocationRecycler.setLayoutManager(new LinearLayoutManager(this));
+        viewLocationRecycler.setAdapter(locationViewAdapter);
 
         editBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,6 +107,7 @@ public class ViewNotes extends AppCompatActivity {
                 intent.putExtra("fromDate", fromDate);
                 intent.putExtra("toDate", toDate);
                 intent.putExtra("notes", (java.io.Serializable) notesList);
+                intent.putExtra("locations", (java.io.Serializable) locationList);
 
                 startActivity(intent);
             }

@@ -20,7 +20,7 @@
     </ScrollView>
 
     <Button
-        android:id="@+id/saveDialogBtn"
+        android:id="@+id/saveNotesDialogBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Save"

@@ -4,7 +4,8 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="8dp"
-    android:background="@drawable/edittextborder">
+    android:background="@drawable/edittextborder"
+    android:layout_margin="5dp">
 
     <!-- Card Container -->
     <LinearLayout

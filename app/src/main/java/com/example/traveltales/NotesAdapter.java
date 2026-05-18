@@ -13,11 +13,9 @@ import java.util.List;
 public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> {
 
     private List<Note> notesList;
-    private boolean useCustomLayout;
 
     public NotesAdapter(List<Note> notesList) {
         this.notesList = notesList;
-        this.useCustomLayout = useCustomLayout;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

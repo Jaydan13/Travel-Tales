@@ -48,6 +48,7 @@ public class EditNotes extends AppCompatActivity {
     String noteId;
     String currentImageUrl = "";
     ArrayList<Note> notesList = new ArrayList<>();
+    ArrayList<LocationModel> locationList = new ArrayList<>();
     Uri imageUri;
     Spinner editSpinnerDuration;
     RecyclerView editNotesRecycler;
@@ -94,6 +95,7 @@ public class EditNotes extends AppCompatActivity {
         String toDate = getIntent().getStringExtra("toDate");
 
         notesList = (ArrayList<Note>) getIntent().getSerializableExtra("notes");
+        locationList = (ArrayList<LocationModel>) getIntent().getSerializableExtra("locations");
 
         // Spinner
         String[] durationOptions = {"Days", "Weeks", "Months"};
@@ -184,7 +186,7 @@ public class EditNotes extends AppCompatActivity {
             dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
             LinearLayout notesContainer = dialog.findViewById(R.id.notesContainer);
-            Button saveDialogBtn = dialog.findViewById(R.id.saveDialogBtn);
+            Button saveDialogBtn = dialog.findViewById(R.id.saveNotesDialogBtn);
 
             ArrayList<EditText> editTexts = new ArrayList<>();
             LayoutInflater inflater = LayoutInflater.from(this);

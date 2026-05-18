@@ -2,12 +2,10 @@ package com.example.traveltales;
 
 import java.io.Serializable;
 
-public class Note implements Serializable{
+public class Note implements Serializable {
 
     private String title;
     private String note;
-    private String location;
-    private String imageUri;
 
     public Note() {
 
@@ -19,6 +17,6 @@ public class Note implements Serializable{
     }
 
     public String getTitle() {return title;}
-
     public String getNote() {return note;}
+
 }
