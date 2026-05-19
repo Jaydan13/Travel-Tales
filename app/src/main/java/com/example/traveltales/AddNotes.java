@@ -21,8 +21,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -44,16 +47,19 @@ public class AddNotes extends AppCompatActivity {
     private static final int PICK_IMAGE = 1;
     Button addCountryFlagChooseBtn, saveBtn, fromDate, toDate, addNotesBtn, addLocationBtn, addImagesBtn;
     ImageView addCountryFlagImage;
-    String fromDateSelected = "", toDateSelected = "";
+    String fromDateSelected = "", toDateSelected = "", uploadedFlagUrl = "";
     ImageButton backBtn;
     EditText countryName, durationNo;
     Spinner spinnerDuration;
     ArrayList<Note> notesList = new ArrayList<>();
     ArrayList<LocationModel> locationList = new ArrayList<>();
+    ArrayList<ImageModel> imagesList = new ArrayList<>();
+    List<String> uploadedImageUrls = new ArrayList<>();
     NotesAdapter notesAdapter;
     LocationAdapter locationAdapter;
+    ImageAdapter imageAdapter;
+    ActivityResultLauncher<Intent> imagePickerLauncher;
     RecyclerView addNotesRecycler, addLocationRecycler, addImageRecycler;
-    Uri imageUri;
     FirebaseAuth mAuth;
     FirebaseFirestore db;
 
@@ -92,6 +98,13 @@ public class AddNotes extends AppCompatActivity {
         locationAdapter = new LocationAdapter(locationList);
         addLocationRecycler.setLayoutManager(new LinearLayoutManager(this));
         addLocationRecycler.setAdapter(locationAdapter);
+
+        imageAdapter = new ImageAdapter(imagesList);
+        addImageRecycler.setLayoutManager(new GridLayoutManager(this, 2));
+        addImageRecycler.setAdapter(imageAdapter);
+
+        String countryNameVisit = getIntent().getStringExtra("countryName");
+        countryName.setText(countryNameVisit);
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
@@ -184,7 +197,6 @@ public class AddNotes extends AppCompatActivity {
             }
 
             for (int i = 1; i <= count; i++) {
-
                 View noteView = inflater.inflate(R.layout.item_note_entry, notesContainer, false);
 
                 TextView dayTitle = noteView.findViewById(R.id.dayTitle);
@@ -194,7 +206,6 @@ public class AddNotes extends AppCompatActivity {
 
                 notesContainer.addView(noteView);
                 editTexts.add(noteEditText);
-
             }
 
             saveNotesDialogBtn.setOnClickListener(v -> {
@@ -235,16 +246,16 @@ public class AddNotes extends AppCompatActivity {
 
             Builder builder = new Builder(AddNotes.this);
 
-            View dialogView = getLayoutInflater().inflate(R.layout.item_location_entry, null);
-            builder.setView(dialogView);
+            View dialogLocationView = getLayoutInflater().inflate(R.layout.item_location_entry, null);
+            builder.setView(dialogLocationView);
 
             AlertDialog dialog = builder.create();
             dialog.show();
 
             // Dialog Views
-            RecyclerView locationRecycler = dialogView.findViewById(R.id.locationRecycler);
-            Button dialogAddLocationBtn = dialogView.findViewById(R.id.dialogAddLocationBtn);
-            Button dialogSaveLocationBtn = dialogView.findViewById(R.id.dialogSaveLocationBtn);
+            RecyclerView locationRecycler = dialogLocationView.findViewById(R.id.locationRecycler);
+            Button dialogAddLocationBtn = dialogLocationView.findViewById(R.id.dialogAddLocationBtn);
+            Button dialogSaveLocationBtn = dialogLocationView.findViewById(R.id.dialogSaveLocationBtn);
 
             List<LocationModel> tempLocationList = new ArrayList<>();
             LocationAdapter tempAdapter = new LocationAdapter(tempLocationList);
@@ -276,6 +287,47 @@ public class AddNotes extends AppCompatActivity {
 
         });
 
+        imagePickerLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+
+            if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+
+                Intent data = result.getData();
+
+                // MULTIPLE IMAGES SELECTED
+                if (data.getClipData() != null) {
+                    int count = data.getClipData().getItemCount();
+
+                    for (int i = 0; i < count; i++) {
+
+                        Uri imageUri = data.getClipData().getItemAt(i).getUri();
+
+                        imagesList.add(new ImageModel(imageUri.toString()));
+                    }
+                }
+
+                // SINGLE IMAGE SELECTED
+                else if (data.getData() != null) {
+                    Uri imageUri = data.getData();
+
+                    imagesList.add(new ImageModel(imageUri.toString()));
+                }
+
+                imageAdapter.notifyDataSetChanged();
+            }
+        });
+
+        addImagesBtn.setOnClickListener(v -> {
+
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+
+            intent.setType("image/*");
+
+            // ALLOW MULTIPLE IMAGES
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+
+            imagePickerLauncher.launch(intent);
+        });
+
         saveBtn.setOnClickListener(view -> saveNotes());
 
     }
@@ -291,12 +343,32 @@ public class AddNotes extends AppCompatActivity {
 
         super.onActivityResult(requestCode, resultCode, data);
 
-        // IMAGE PICK
-        if (requestCode == PICK_IMAGE && resultCode == RESULT_OK
-                && data != null && data.getData() != null) {
+        if (requestCode == PICK_IMAGE && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            Uri uri = data.getData();
 
-            imageUri = data.getData();
-            addCountryFlagImage.setImageURI(imageUri);
+            MediaManager.get().upload(uri).callback(new UploadCallback() {
+
+                @Override
+                public void onStart(String requestId) {}
+
+                @Override
+                public void onProgress(String requestId, long bytes, long totalBytes) {}
+
+                @Override
+                public void onSuccess(String requestId, Map resultData) {
+
+                    uploadedFlagUrl = resultData.get("secure_url").toString();
+
+                    addCountryFlagImage.setImageURI(uri);
+                }
+
+                @Override
+                public void onError(String requestId, ErrorInfo error) {}
+
+                @Override
+                public void onReschedule(String requestId, ErrorInfo error) {}
+
+            }).dispatch();
         }
     }
     private void saveNotes() {
@@ -340,7 +412,6 @@ public class AddNotes extends AppCompatActivity {
 
         // Convert notes list into Firestore format
         List<Map<String, String>> notesData = new ArrayList<>();
-
         for (Note note : notesList) {
 
             Map<String, String> noteMap = new HashMap<>();
@@ -352,7 +423,6 @@ public class AddNotes extends AppCompatActivity {
         }
 
         List<Map<String, Object>> locationsData = new ArrayList<>();
-
         for (LocationModel location : locationList) {
 
             Map<String, Object> locationMap = new HashMap<>();
@@ -368,17 +438,44 @@ public class AddNotes extends AppCompatActivity {
         Map<String, Object> noteData = new HashMap<>();
 
         noteData.put("countryName", countryName);
+        noteData.put("imageUrl", uploadedFlagUrl);
         noteData.put("durationNumber", durationNumberStr);
         noteData.put("durationPeriod", durationPeriod);
         noteData.put("fromDate", fromDateSelected);
         noteData.put("toDate", toDateSelected);
         noteData.put("notes", notesData);
         noteData.put("locations", locationsData);
+        noteData.put("images", uploadedImageUrls);
 
-        // If image uploaded
-        if (imageUri != null) {
+        uploadImagesAndSave(userId, noteData);
+    }
+    private void saveToFirestore(String userId, Map<String, Object> noteData) {
 
-            MediaManager.get().upload(imageUri).callback(new UploadCallback() {
+        db.collection("users").document(userId).collection("notes").add(noteData).addOnSuccessListener(documentReference -> {
+
+            Toast.makeText(this, "Notes Saved Successfully", Toast.LENGTH_SHORT).show();
+            finish();
+        }).addOnFailureListener(e -> {
+            Toast.makeText(this, "Failed To Save Notes", Toast.LENGTH_SHORT).show();
+        });
+    }
+    private void uploadImagesAndSave(String userId, Map<String, Object> noteData) {
+        uploadedImageUrls.clear();
+
+        if (imagesList.isEmpty()) {
+            noteData.put("images", new ArrayList<>());
+
+            saveToFirestore(userId, noteData);
+            return;
+        }
+
+        final int totalImages = imagesList.size();
+        final int[] uploadedCount = {0};
+
+        for (ImageModel image : imagesList) {
+            Uri uri = Uri.parse(image.getImageUri());
+
+            MediaManager.get().upload(uri).callback(new UploadCallback() {
 
                 @Override
                 public void onStart(String requestId) {
@@ -392,36 +489,29 @@ public class AddNotes extends AppCompatActivity {
 
                 @Override
                 public void onSuccess(String requestId, Map resultData) {
-                    String imageUrl = resultData.get("secure_url").toString();
-                    noteData.put("imageUrl", imageUrl);
-                    saveToFirestore(userId, noteData);
+
+                    String url = resultData.get("secure_url").toString();
+
+                    uploadedImageUrls.add(url);
+
+                    uploadedCount[0]++;
+
+                    if (uploadedCount[0] == totalImages) {
+                        noteData.put("images", uploadedImageUrls);
+
+                        saveToFirestore(userId, noteData);
+                    }
                 }
 
                 @Override
                 public void onError(String requestId, ErrorInfo error) {
-                    Toast.makeText(AddNotes.this, "Image Upload Failed", Toast.LENGTH_SHORT).show();
+
+                    Toast.makeText(AddNotes.this, "Image upload failed", Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
-                public void onReschedule(String requestId, ErrorInfo error) {
-
-                }
+                public void onReschedule(String requestId, ErrorInfo error) {}
             }).dispatch();
-
-        } else {
-            noteData.put("imageUrl", "");
-            saveToFirestore(userId, noteData);
         }
     }
-    private void saveToFirestore(String userId, Map<String, Object> noteData) {
-
-        db.collection("users").document(userId).collection("notes").add(noteData).addOnSuccessListener(documentReference -> {
-
-            Toast.makeText(this, "Notes Saved Successfully", Toast.LENGTH_SHORT).show();
-            finish();
-        }).addOnFailureListener(e -> {
-            Toast.makeText(this, "Failed To Save Notes", Toast.LENGTH_SHORT).show();
-        });
-    }
-
 }

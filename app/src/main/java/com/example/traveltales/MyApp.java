@@ -14,9 +14,9 @@ public class MyApp extends Application {
         super.onCreate();
 
         Map<String, String> config = new HashMap<>();
-        config.put("cloud_name", "YOUR_CLOUD_NAME");
-        config.put("api_key", "YOUR_API_KEY");
-        config.put("api_secret", "YOUR_API_SECRET");
+        config.put("cloud_name", "dmllbhsrc");
+        config.put("api_key", "119362629813927");
+        config.put("api_secret", "6PpRbRgj4J2kXmwX6MJUs3QzOAY");
 
         MediaManager.init(this, config);
     }

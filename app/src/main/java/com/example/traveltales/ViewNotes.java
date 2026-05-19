@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,7 +24,7 @@ import java.util.List;
 public class ViewNotes extends AppCompatActivity {
 
     ImageButton backBtn;
-    TextView viewCountryName, viewFromDate, viewToDate, viewDurationNo, viewSpinnerDuration;
+    TextView viewCountryName, viewFromDate, viewToDate, viewDurationNo, viewSpinnerDuration, viewNotesText, viewLocationsText, viewImagesText;
     ImageView viewCountryFlagImage;
     RecyclerView viewNotesRecycler, viewLocationRecycler, viewImagesRecycler;
     Button editBtn, deleteBtn;
@@ -45,6 +46,9 @@ public class ViewNotes extends AppCompatActivity {
         viewToDate = findViewById(R.id.viewToDate);
         viewDurationNo = findViewById(R.id.viewDurationNo);
         viewSpinnerDuration = findViewById(R.id.viewSpinnerDuration);
+        viewNotesText = findViewById(R.id.viewNotesText);
+        viewLocationsText = findViewById(R.id.viewLocationsText);
+        viewImagesText = findViewById(R.id.viewImagesText);
         viewCountryFlagImage = findViewById(R.id.viewCountryFlagImage);
 
         viewNotesRecycler = findViewById(R.id.viewNotesRecycler);
@@ -66,6 +70,7 @@ public class ViewNotes extends AppCompatActivity {
         String toDate = getIntent().getStringExtra("toDate");
         List<Note> notesList = (List<Note>) getIntent().getSerializableExtra("notes");
         List<LocationModel> locationList = (List<LocationModel>) getIntent().getSerializableExtra("locations");
+        List<ImageModel> imagesList = (List<ImageModel>) getIntent().getSerializableExtra("images");
 
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,13 +90,30 @@ public class ViewNotes extends AppCompatActivity {
         } else {
             Glide.with(this).load(imageUrl).into(viewCountryFlagImage);
         }
-        NotesAdapter notesAdapter = new NotesAdapter(notesList);
-        viewNotesRecycler.setLayoutManager(new LinearLayoutManager(this));
-        viewNotesRecycler.setAdapter(notesAdapter);
 
-        LocationViewAdapter locationViewAdapter = new LocationViewAdapter(locationList);
-        viewLocationRecycler.setLayoutManager(new LinearLayoutManager(this));
-        viewLocationRecycler.setAdapter(locationViewAdapter);
+        if (notesList.isEmpty()) {
+            viewNotesText.setText("Notes:\nNo Notes Added");
+        } else {
+            NotesAdapter notesAdapter = new NotesAdapter(notesList);
+            viewNotesRecycler.setLayoutManager(new LinearLayoutManager(this));
+            viewNotesRecycler.setAdapter(notesAdapter);
+        }
+
+        if (locationList.isEmpty()) {
+            viewLocationsText.setText("Locations:\nNo Locations added");
+        } else {
+            LocationViewAdapter locationViewAdapter = new LocationViewAdapter(locationList);
+            viewLocationRecycler.setLayoutManager(new LinearLayoutManager(this));
+            viewLocationRecycler.setAdapter(locationViewAdapter);
+        }
+
+        if (imagesList.isEmpty()) {
+            viewImagesText.setText("Images:\nNo Images Added");
+        } else {
+            ImageViewAdapter imageViewAdapter = new ImageViewAdapter(this, imagesList);
+            viewImagesRecycler.setLayoutManager(new GridLayoutManager(this, 2));
+            viewImagesRecycler.setAdapter(imageViewAdapter);
+        }
 
         editBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,6 +130,7 @@ public class ViewNotes extends AppCompatActivity {
                 intent.putExtra("toDate", toDate);
                 intent.putExtra("notes", (java.io.Serializable) notesList);
                 intent.putExtra("locations", (java.io.Serializable) locationList);
+                intent.putExtra("images", (java.io.Serializable) imagesList);
 
                 startActivity(intent);
             }

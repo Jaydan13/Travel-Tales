@@ -70,6 +70,7 @@ public class HomeNotesAdapter extends RecyclerView.Adapter<HomeNotesAdapter.View
             intent.putExtra("toDate", item.getToDate());
             intent.putExtra("notes", (java.io.Serializable) item.getNotes());
             intent.putExtra("locations", (java.io.Serializable) item.getLocations());
+            intent.putExtra("images", (java.io.Serializable) item.getImages());
 
             context.startActivity(intent);
         });

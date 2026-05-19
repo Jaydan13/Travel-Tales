@@ -89,9 +89,9 @@ public class HomePage extends AppCompatActivity {
                 String toDate = doc.getString("toDate");
                 List<Note> notesList = new ArrayList<>();
                 List<LocationModel> locationList = new ArrayList<>();
+                List<ImageModel> imagesList = new ArrayList<>();
 
                 List<Map<String, Object>> rawNotes = (List<Map<String, Object>>) doc.get("notes");
-
                 if (rawNotes != null) {
                     for (Map<String, Object> item : rawNotes) {
 
@@ -120,7 +120,14 @@ public class HomePage extends AppCompatActivity {
                     }
                 }
 
-                noteList.add(new HomeNoteItem(id, countryName, imageUrl, durationNumber, durationPeriod, fromDate, toDate, notesList, locationList));
+                List<String> rawImages = (List<String>) doc.get("images");
+                if (rawImages != null) {
+                    for (String url : rawImages) {
+                        imagesList.add(new ImageModel(url));
+                    }
+                }
+
+                noteList.add(new HomeNoteItem(id, countryName, imageUrl, durationNumber, durationPeriod, fromDate, toDate, notesList, locationList, imagesList));
             }
 
             adapter.notifyDataSetChanged();

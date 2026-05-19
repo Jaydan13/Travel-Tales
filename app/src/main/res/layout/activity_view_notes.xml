@@ -137,37 +137,83 @@
 
             </LinearLayout>
 
-            <androidx.recyclerview.widget.RecyclerView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:id="@+id/viewNotesRecycler"
-                android:padding="10dp"
+                android:orientation="vertical"
                 android:background="@drawable/edittextborder"
                 android:layout_marginBottom="5dp">
 
-            </androidx.recyclerview.widget.RecyclerView>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Notes:"
+                    android:id="@+id/viewNotesText"
+                    android:textStyle="italic"
+                    android:layout_marginBottom="5dp"/>
 
-            <androidx.recyclerview.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:id="@+id/viewNotesRecycler">
+
+                </androidx.recyclerview.widget.RecyclerView>
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:id="@+id/viewLocationsRecycler"
-                android:padding="10dp"
+                android:orientation="vertical"
                 android:background="@drawable/edittextborder"
                 android:layout_marginBottom="5dp">
 
-            </androidx.recyclerview.widget.RecyclerView>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Locations:"
+                    android:id="@+id/viewLocationsText"
+                    android:textStyle="italic"
+                    android:layout_marginBottom="5dp"/>
 
-            <androidx.recyclerview.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:id="@+id/viewLocationsRecycler">
+
+                </androidx.recyclerview.widget.RecyclerView>
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:id="@+id/viewImagesRecycler"
-                android:padding="10dp"
-                android:background="@drawable/edittextborder">
+                android:orientation="vertical"
+                android:background="@drawable/edittextborder"
+                android:layout_marginBottom="5dp">
 
-            </androidx.recyclerview.widget.RecyclerView>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Images:"
+                    android:id="@+id/viewImagesText"
+                    android:textStyle="italic"
+                    android:layout_marginBottom="5dp"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:id="@+id/viewImagesRecycler">
+
+                </androidx.recyclerview.widget.RecyclerView>
+
+            </LinearLayout>
 
         </LinearLayout>
 
