@@ -244,7 +244,7 @@ public class AddNotes extends AppCompatActivity {
 
         addLocationBtn.setOnClickListener(v -> {
 
-            Builder builder = new Builder(AddNotes.this);
+            Builder builder = new Builder(this);
 
             View dialogLocationView = getLayoutInflater().inflate(R.layout.item_location_entry, null);
             builder.setView(dialogLocationView);
