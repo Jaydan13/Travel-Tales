@@ -10,6 +10,8 @@ import android.widget.LinearLayout;
 
 import androidx.core.content.ContextCompat;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 public class ThemeHelper {
 
     public static void applyTheme(Activity activity) {
@@ -32,14 +34,13 @@ public class ThemeHelper {
             if (view instanceof Button) {
                 Button btn = (Button) view;
                 btn.setBackgroundTintList(ColorStateList.valueOf(colour));
-            }
-
-            // LAYOUTS → change background
-            else if (view instanceof LinearLayout) {
+            } else if (view instanceof LinearLayout) { // LAYOUTS → change background
                 view.setBackgroundColor(colour);
+            } else if (view instanceof FloatingActionButton) {
+                FloatingActionButton fabBtn = (FloatingActionButton) view;
+                fabBtn.setBackgroundTintList(ColorStateList.valueOf(colour));
             }
         }
-
         // Loop through children
         if (view instanceof ViewGroup) {
             ViewGroup group = (ViewGroup) view;
