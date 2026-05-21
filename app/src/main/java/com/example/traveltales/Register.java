@@ -60,7 +60,6 @@ public class Register extends AppCompatActivity {
         registerBtn.setOnClickListener(view -> registerUser());
 
     }
-
     private void registerUser() {
         String email = newEmail.getText().toString().trim();
         String password = newPass.getText().toString().trim();

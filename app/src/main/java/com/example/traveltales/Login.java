@@ -42,8 +42,6 @@ public class Login extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
-
-        //Go to the Register Page when button clicked
         goToRegisterBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,7 +53,6 @@ public class Login extends AppCompatActivity {
         loginBtn.setOnClickListener(view -> loginUser());
 
     }
-
     private void loginUser() {
 
         String email = emailText.getText().toString().trim();
@@ -76,7 +73,7 @@ public class Login extends AppCompatActivity {
                 db.collection("users").document(userId).get().addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
                         String username = documentSnapshot.getString("username");
-                        Toast.makeText(this, "Welcome" + username, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Welcome " + username + "!", Toast.LENGTH_SHORT).show();
 
                         Intent intent = new Intent(Login.this, HomePage.class);
                         startActivity(intent);
